@@ -1,0 +1,35 @@
+
+.main-header h1 {
+    margin-top: 75px;
+}
+
+.city {
+    margin-top: 75px;
+}
+
+.city img {
+    height: 35px;
+}
+
+.query-button {
+    margin: 30px
+}
+
+.weather h2 {
+    margin: 15px;
+}
+.weather img {
+    height: 40px;
+}
+
+.weather-details img {
+    height: 20px;
+}
+
+.width-1 {
+    width: 400px;
+}
+
+.db img {
+    height: 20px;
+}
