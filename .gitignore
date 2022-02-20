@@ -34,3 +34,7 @@ build/
 /mvnw.cmd
 /mvnw
 /.mvn/
+
+
+### test ###
+/src/test/java/pl/kielce/api/MyTest.java
