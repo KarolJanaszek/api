@@ -1,9 +1,5 @@
 package pl.kielce.api.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Generated;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +7,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.annotation.Generated;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Entity
+@Table(name = "c_weather")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 	"id",
@@ -32,47 +42,91 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("jsonschema2pojo")
 public class ConsolidatedWeather {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long dbId;
+
 	@JsonProperty("id")
-	private Long id;
-	@JsonProperty("weather_state_name")
-	private String weatherStateName;
-	@JsonProperty("weather_state_abbr")
-	private String weatherStateAbbr;
-	@JsonProperty("wind_direction_compass")
-	private String windDirectionCompass;
-	@JsonProperty("created")
-	private String created;
+	private Long cwId;
+
 	@JsonProperty("applicable_date")
 	private String applicableDate;
+
 	@JsonProperty("min_temp")
 	private Double minTemp;
+
 	@JsonProperty("max_temp")
 	private Double maxTemp;
+
 	@JsonProperty("the_temp")
 	private Double theTemp;
+
 	@JsonProperty("wind_speed")
 	private Double windSpeed;
+
 	@JsonProperty("wind_direction")
 	private Double windDirection;
+
 	@JsonProperty("air_pressure")
 	private Double airPressure;
+
+	// transient
+	@Transient
+	@JsonProperty("weather_state_name")
+	private String weatherStateName;
+
+	@Transient
+	@JsonProperty("weather_state_abbr")
+	private String weatherStateAbbr;
+
+	@Transient
+	@JsonProperty("wind_direction_compass")
+	private String windDirectionCompass;
+
+	@Transient
+	@JsonProperty("created")
+	private String created;
+
+	@Transient
 	@JsonProperty("humidity")
 	private Integer humidity;
+
+	@Transient
 	@JsonProperty("visibility")
 	private Double visibility;
+
+	@Transient
 	@JsonProperty("predictability")
 	private Integer predictability;
+
+	@Transient
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+	// added
+	@ManyToOne
+	private Location location;
+
+
+	// added methods
+	public Boolean checkIfIsInList(List<ConsolidatedWeather> listToCompare) {
+		for (ConsolidatedWeather cw : listToCompare) {
+			if (cw.cwId.equals(this.cwId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// getters and setters
 	@JsonProperty("id")
-	public Long getId() {
-		return id;
+	public Long getCwId() {
+		return cwId;
 	}
 
 	@JsonProperty("id")
-	public void setId(Long id) {
-		this.id = id;
+	public void setCwId(Long id) {
+		this.cwId = id;
 	}
 
 	@JsonProperty("weather_state_name")
