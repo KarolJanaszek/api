@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.annotation.Generated;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,6 +50,7 @@ public class ConsolidatedWeather {
 	@JsonProperty("id")
 	private Long cwId;
 
+	@Column(unique = true)
 	@JsonProperty("applicable_date")
 	private String applicableDate;
 
