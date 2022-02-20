@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.annotation.Generated;
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +113,10 @@ public class ConsolidatedWeather {
 
 
 	// added methods
-	public Boolean checkIfIsInList(List<ConsolidatedWeather> listToCompare) {
+	public Boolean checkIfIsInList(@Nullable List<ConsolidatedWeather> listToCompare) {
+		if (listToCompare == null) {
+			listToCompare = new ArrayList<>();
+		}
 		for (ConsolidatedWeather cw : listToCompare) {
 			if (cw.cwId.equals(this.cwId)) {
 				return true;

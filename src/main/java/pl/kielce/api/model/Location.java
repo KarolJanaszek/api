@@ -8,13 +8,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.annotation.Generated;
-import javax.persistence.Column;
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +39,8 @@ public class Location {
 	@JsonProperty("distance")
 	private Integer distance;
 
-	@Column(name = "name")
 	@JsonProperty("title")
-	private String title;
+	private String name;
 
 	@JsonProperty("location_type")
 	private String locationType;
@@ -48,9 +48,8 @@ public class Location {
 	@JsonProperty("woeid")
 	private Integer woeid;
 
-	@Column(name = "coordiantes")
 	@JsonProperty("latt_long")
-	private String lattLong;
+	private String coordiantes;
 
 	// transient
 	@Transient
@@ -65,7 +64,10 @@ public class Location {
 
 
 	// added methods
-	public Boolean checkIfIsInList(List<Location> listToCompare) {
+	public Boolean checkIfIsInList(@Nullable List<Location> listToCompare) {
+		if (listToCompare == null) {
+			listToCompare = new ArrayList<>();
+		}
 		for (Location l : listToCompare) {
 			if (l.woeid.equals(this.woeid)) {
 				return true;
@@ -86,13 +88,13 @@ public class Location {
 	}
 
 	@JsonProperty("title")
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
 	@JsonProperty("title")
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String title) {
+		this.name = title;
 	}
 
 	@JsonProperty("location_type")
@@ -116,13 +118,13 @@ public class Location {
 	}
 
 	@JsonProperty("latt_long")
-	public String getLattLong() {
-		return lattLong;
+	public String getCoordiantes() {
+		return coordiantes;
 	}
 
 	@JsonProperty("latt_long")
-	public void setLattLong(String lattLong) {
-		this.lattLong = lattLong;
+	public void setCoordiantes(String lattLong) {
+		this.coordiantes = lattLong;
 	}
 
 	@JsonAnyGetter

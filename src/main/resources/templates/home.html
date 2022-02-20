@@ -16,16 +16,63 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-
+        <div class="col main-header text-center">
+            <h1>Weather App</h1>
+        </div>
     </div>
     <div class="row">
-
+        <div class="col">
+            <form th:action="@{/}" method="get" class="query-button text-center">
+                <input type="text" name="query">
+                <input type="submit" class="btn btn-success" value="Search for cities">
+            </form>
+        </div>
     </div>
     <div class="row">
-
+        <div class="col">
+            <input type="button" id="toggleFavBtn" class="btn btn-info" value="Show favorites">
+        </div>
     </div>
     <div class="row">
-
+        <div class="col">
+            <div class="city">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="width-1">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="l: ${loc}">
+                            <td class="db">
+                                <span th:text="${l.getWoeid()}"></span>
+                                <img th:if="${l.checkIfIsInList(locationsInDB)}" th:src="@{/image/database.png}" alt="db">
+                            </td>
+                            <td th:text="${l.getName()}"></td>
+                            <td>
+                                <a th:href="@{/(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()})}" class="link">
+                                    <button type="button" class="btn btn-info">Show details</button>
+                                </a>
+                            </td>
+                            <td>
+                                <!--TODO-->
+                                <a class="link" th:href="@{/}">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col">
+            <!--TODO-->
+            <h2 class="text-center">
+                <span th:text="${weather.getTitle()}"></span>
+            </h2>
+        </div>
     </div>
 </div>
 
