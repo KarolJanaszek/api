@@ -22,7 +22,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <form th:action="@{/}" method="get" class="query-button text-center">
+            <form th:action="@{/app}" method="get" class="query-button text-center">
                 <input type="text" name="query">
                 <input type="submit" class="btn btn-success" value="Search for cities">
             </form>
@@ -53,13 +53,13 @@
                             </td>
                             <td th:text="${l.getName()}"></td>
                             <td>
-                                <a th:href="@{/(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()})}" class="link">
+                                <a th:href="@{/app/(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()})}" class="link">
                                     <button type="button" class="btn btn-info">Show details</button>
                                 </a>
                             </td>
                             <td>
                                 <!--TODO-->
-                                <a class="link" th:href="@{/}">
+                                <a class="link" th:href="@{/app/}">
                                 </a>
                             </td>
                         </tr>
@@ -68,10 +68,26 @@
             </div>
         </div>
         <div class="col">
-            <!--TODO-->
-            <h2 class="text-center">
-                <span th:text="${weather.getTitle()}"></span>
-            </h2>
+            <div th:if="${param.id != null}">
+                <h2 class="text-center">
+                    <span th:text="${weather.getTitle()}"></span>
+                </h2>
+                <table class="table text-center">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Day</th>
+                        <th scope="col">Weather</th>
+                        <th scope="col">Min temp [°C]</th>
+                        <th scope="col">Max temp [°C]</th>
+                        <th scope="col">Wind speed [m/s]</th>
+                        <th scope="col">Air pressure [hPa]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -80,6 +96,6 @@
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script th:src="@{app.js}"></script>
+<script src="/app.js"></script>
 </body>
 </html>
