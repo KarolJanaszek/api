@@ -62,8 +62,10 @@
                                 </a>
                             </td>
                             <td>
-                                <!--TODO-->
-                                <a class="link" th:href="@{/app/}">
+                                <a class="link" th:href="@{/app/{locWoeid}/favorite(query=${#httpServletRequest.getParameter('query')},
+                                            id=${l.getWoeid()}, locWoeid=${l.getWoeid()})}">
+                                    <img th:if="${l.checkIfIsInList(favorites)}" th:src="@{/image/favoriteTrue.png}" alt="fav">
+                                    <img th:if="${!l.checkIfIsInList(favorites)}" th:src="@{/image/favoriteFalse.png}" alt="fav">
                                 </a>
                             </td>
                         </tr>
@@ -87,6 +89,7 @@
                         <th scope="col">Max temp [°C]</th>
                         <th scope="col">Wind speed [m/s]</th>
                         <th scope="col">Air pressure [hPa]</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody th:each="i : ${#numbers.sequence(0, weather.getConsolidatedWeather().size() - 1)}">
@@ -101,6 +104,26 @@
                             <td th:text="${#numbers.formatDecimal(cw.getMaxTemp(), 1, 1)}"></td>
                             <td th:text="${#numbers.formatDecimal(cw.getWindSpeed(), 1, 2)}"></td>
                             <td th:text="${cw.getAirPressure()}"></td>
+                            <td>
+                                <a class="link" th:if="${!cw.checkIfIsInList(cWeatherInDb)}"
+                                    th:href="@{/app/{locWoeid}/{cwId}/save(
+                                            query=${#httpServletRequest.getParameter('query')},
+                                            id=${selectedLocation.getWoeid()},
+                                            locWoeid=${selectedLocation.getWoeid()},
+                                            cwId=${cw.getCwId()}
+                                            )}">
+                                    <input type="button" class="btn btn-warning btn-xs" value="Save">
+                                </a>
+                                <a class="link" th:if="${cw.checkIfIsInList(cWeatherInDb)}"
+                                    th:href="@{/app/{locWoeid}/{cwId}/delete(
+                                            query=${#httpServletRequest.getParameter('query')},
+                                            id=${selectedLocation.getWoeid()},
+                                            locWoeid=${selectedLocation.getWoeid()},
+                                            cwId=${cw.getCwId()}
+                                            )}">
+                                    <input type="button" class="btn btn-danger btn-xs" value="Save">
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

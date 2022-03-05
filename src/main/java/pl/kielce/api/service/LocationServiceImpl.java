@@ -8,6 +8,7 @@ import pl.kielce.api.repo.LocationRepo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
@@ -52,9 +53,13 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public void toggleFavoriteInDb(Location location) {
+	public void toggleFavoriteInDb(Integer woeid) {
+		Location location = getFromDbOrApi(woeid)
+			.orElseThrow(() -> new NoSuchElementException("Location not found."));
 		location.setFavorite(!location.isFavorite());
-		locationRepo.save(location);
+		if (location.getId() == null) {
+			addToDb(location);
+		}
 	}
 
 	// from API

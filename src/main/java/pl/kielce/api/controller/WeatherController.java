@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,4 +56,18 @@ public class WeatherController {
 		model.addAttribute("cWeatherInDb", consolidatedWeatherService.getAllFromDB());
 		return "home";
 	}
+
+	@GetMapping("/{locWoeid}/favorite")
+	public String toggleFavorite(@PathVariable Integer locWoeid,
+							   @RequestParam(required = false, defaultValue = "") String query,
+							   @RequestParam(required = false, defaultValue = "") String id
+	) {
+		locationService.toggleFavoriteInDb(locWoeid);
+		return "redirect:/app";
+	}
+
+	// "/{locWoeid}/save"
+	// "/{locWoeid}/delete"
+	// "/{locWoeid}/{cwid}/save"
+	// "/{locWoeid}/{cwid}/delete"
 }

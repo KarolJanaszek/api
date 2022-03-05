@@ -12,7 +12,7 @@ public interface LocationService {
 	Optional<Location> getFromDBByWoeid(Integer woeid);
 	void addToDb(Location location);
 	void deleteFromDb(Location location);
-	void toggleFavoriteInDb(Location location);
+	void toggleFavoriteInDb(Integer woeid);
 
 	// from API
 	List<Location> getFromApiByName(String name);
