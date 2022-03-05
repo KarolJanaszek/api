@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Weather</title>
+    <link rel="icon" type="image/x-icon" th:href="'https://www.metaweather.com/static/img/weather/ico/' +
+                        ${weather.getConsolidatedWeather() != null && weather.getConsolidatedWeather().get(0) != null ?
+                        weather.getConsolidatedWeather().get(0).getWeatherStateAbbr() :
+                        'c'} + '.ico'">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/app.css}">
@@ -68,9 +72,11 @@
             </div>
         </div>
         <div class="col">
-            <div th:if="${param.id != null}">
+            <div th:if="${param.id != null}" class="weather">
                 <h2 class="text-center">
                     <span th:text="${weather.getTitle()}"></span>
+                    <img th:src="'https://www.metaweather.com/static/img/weather/' +
+                        ${weather.getConsolidatedWeather().get(0).getWeatherStateAbbr()} + '.svg'" alt="w-img">
                 </h2>
                 <table class="table text-center">
                     <thead class="thead-light">
@@ -83,8 +89,19 @@
                         <th scope="col">Air pressure [hPa]</th>
                     </tr>
                     </thead>
-                    <tbody>
-
+                    <tbody th:each="i : ${#numbers.sequence(0, weather.getConsolidatedWeather().size() - 1)}">
+                        <tr th:each="cw : ${weather.getConsolidatedWeather().get(i)}">
+                            <td th:text="${cw.getApplicableDate()}" class="text-left"></td>
+                            <td class="weather-details text-left">
+                                <span th:text="${cw.getWeatherStateName()}"></span>
+                                <img th:src="'https://www.metaweather.com/static/img/weather/' +
+                                    ${cw.getWeatherStateAbbr()} + '.svg'" alt="w-img">
+                            </td>
+                            <td th:text="${#numbers.formatDecimal(cw.getMinTemp(), 1, 1)}"></td>
+                            <td th:text="${#numbers.formatDecimal(cw.getMaxTemp(), 1, 1)}"></td>
+                            <td th:text="${#numbers.formatDecimal(cw.getWindSpeed(), 1, 2)}"></td>
+                            <td th:text="${cw.getAirPressure()}"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
