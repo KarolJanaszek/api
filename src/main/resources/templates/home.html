@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
-
+            updateFavLinks(document.getElementsByClassName('link'));
         });
     </script>
 </head>
@@ -34,11 +34,37 @@
     </div>
     <div class="row">
         <div class="col">
-            <input type="button" id="toggleFavBtn" class="btn btn-info" value="Show favorites">
+            <input type="button" id="toggleFavBtn" class="btn btn-info" onclick="togleFav()" value="Show favorites">
         </div>
     </div>
     <div class="row">
         <div class="col">
+            <div id="favorites" class="city" th:style="${#httpServletRequest.getParameter('fav') != null ? 'display: block' : 'display: none'}">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="width-1">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="l: ${favorites}">
+                        <td th:text="${l.getWoeid()}"></td>
+                        <td th:text="${l.getName()}"></td>
+                        <td>
+                            <a th:href="@{/app/(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()}, fav='')}"><button type="button" class="btn btn-info">Show details</button></a>
+                        </td>
+                        <td>
+                            <a th:href="@{/app/{locWoeid}/favorite(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()}, locWoeid=${l.getWoeid()}, fav='')}">
+                                <img th:src="@{/image/favoriteTrue.png}" alt="fav">
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="city">
                 <table class="table">
                     <thead class="thead-light">

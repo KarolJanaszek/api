@@ -61,34 +61,40 @@ public class WeatherController {
 	@GetMapping("/app/{locWoeid}/favorite")
 	public String toggleFavorite(@PathVariable Integer locWoeid,
 								 @RequestParam(required = false, defaultValue = "") String query,
-								 @RequestParam(required = false, defaultValue = "") String id
+								 @RequestParam(required = false, defaultValue = "") String id,
+								 @RequestParam(required = false) String fav
 	) {
 		locationService.toggleFavoriteInDb(locWoeid);
-		return "redirect:/app";
+		String params = paramsBuilder(query, id, fav);
+		return "redirect:/app" + params;
 	}
 
 	// "/{locWoeid}/save"
 	@GetMapping("/app/{locWoeid}/save")
 	public String saveLocation(@PathVariable Integer locWoeid,
 							   @RequestParam(required = false, defaultValue = "") String query,
-							   @RequestParam(required = false, defaultValue = "") String id
+							   @RequestParam(required = false, defaultValue = "") String id,
+							   @RequestParam(required = false) String fav
 	) {
 		Location location = locationService.getFromApiByWoeid(locWoeid)
 			.orElseThrow(() -> new NoSuchElementException("Location not found."));
 		locationService.addToDb(location);
-		return "redirect:/app";
+		String params = paramsBuilder(query, id, fav);
+		return "redirect:/app" + params;
 	}
 
 	// "/{locWoeid}/delete"
 	@GetMapping("/app/{locWoeid}/delete")
 	public String deleteLocation(@PathVariable Integer locWoeid,
 								 @RequestParam(required = false, defaultValue = "") String query,
-								 @RequestParam(required = false, defaultValue = "") String id
+								 @RequestParam(required = false, defaultValue = "") String id,
+								 @RequestParam(required = false) String fav
 	) {
 		Location location = locationService.getFromDBByWoeid(locWoeid)
 			.orElseThrow(() -> new NoSuchElementException("Location not found."));
 		locationService.deleteFromDb(location);
-		return "redirect:/app";
+		String params = paramsBuilder(query, id, fav);
+		return "redirect:/app" + params;
 	}
 
 	// "/{locWoeid}/{cwid}/save"
@@ -96,7 +102,8 @@ public class WeatherController {
 	public String saveConsolidatedWeather(@PathVariable Integer locWoeid,
 										  @PathVariable Long cwId,
 										  @RequestParam(required = false, defaultValue = "") String query,
-										  @RequestParam(required = false, defaultValue = "") String id
+										  @RequestParam(required = false, defaultValue = "") String id,
+										  @RequestParam(required = false) String fav
 	) {
 		Location location = locationService.getFromDBByWoeid(locWoeid)
 			.orElseThrow(() -> new NoSuchElementException("Location not found in DB."));
@@ -114,18 +121,38 @@ public class WeatherController {
 		} else {
 			throw new NoSuchElementException("Consolidated weather not found in that location.");
 		}
-		return "redirect:/app";
+		String params = paramsBuilder(query, id, fav);
+		return "redirect:/app" + params;
 	}
 
 	// "/consolidatedWeather/{cwid}/delete"
 	@GetMapping("/app/consolidatedWeather/{cwId}/delete")
 	public String deleteConsolidatedWeather(@PathVariable Long cwId,
 											@RequestParam(required = false, defaultValue = "") String query,
-											@RequestParam(required = false, defaultValue = "") String id
+											@RequestParam(required = false, defaultValue = "") String id,
+											@RequestParam(required = false) String fav
 	) {
 		ConsolidatedWeather consolidatedWeather = consolidatedWeatherService.getFromDBById(cwId)
 				.orElseThrow(() -> new NoSuchElementException("Consolidated weather not found."));
 		consolidatedWeatherService.delete(consolidatedWeather);
-		return "redirect:/app";
+		String params = paramsBuilder(query, id, fav);
+		return "redirect:/app" + params;
+	}
+
+	private String paramsBuilder(String query, String id, String fav) {
+		StringBuilder sb = new StringBuilder("?");
+		if (!query.isEmpty()) {
+			sb.append("query=").append(query).append("&");
+		}
+		if (!id.isEmpty()) {
+			sb.append("id=").append(id).append("&");
+		}
+		if (fav != null) {
+			sb.append("fav=");
+		}
+		if (sb.lastIndexOf("&") == sb.length() - 1) {
+			sb.deleteCharAt(sb.lastIndexOf("&"));
+		}
+		return sb.toString();
 	}
 }
