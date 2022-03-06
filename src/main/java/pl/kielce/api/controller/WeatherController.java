@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.ResponseStatusException;
+import pl.kielce.api.model.ConsolidatedWeather;
 import pl.kielce.api.model.Location;
 import pl.kielce.api.model.Weather;
 import pl.kielce.api.service.ConsolidatedWeatherService;
@@ -57,17 +58,74 @@ public class WeatherController {
 		return "home";
 	}
 
-	@GetMapping("/{locWoeid}/favorite")
+	@GetMapping("/app/{locWoeid}/favorite")
 	public String toggleFavorite(@PathVariable Integer locWoeid,
-							   @RequestParam(required = false, defaultValue = "") String query,
-							   @RequestParam(required = false, defaultValue = "") String id
+								 @RequestParam(required = false, defaultValue = "") String query,
+								 @RequestParam(required = false, defaultValue = "") String id
 	) {
 		locationService.toggleFavoriteInDb(locWoeid);
 		return "redirect:/app";
 	}
 
 	// "/{locWoeid}/save"
+	@GetMapping("/app/{locWoeid}/save")
+	public String saveLocation(@PathVariable Integer locWoeid,
+							   @RequestParam(required = false, defaultValue = "") String query,
+							   @RequestParam(required = false, defaultValue = "") String id
+	) {
+		Location location = locationService.getFromApiByWoeid(locWoeid)
+			.orElseThrow(() -> new NoSuchElementException("Location not found."));
+		locationService.addToDb(location);
+		return "redirect:/app";
+	}
+
 	// "/{locWoeid}/delete"
+	@GetMapping("/app/{locWoeid}/delete")
+	public String deleteLocation(@PathVariable Integer locWoeid,
+								 @RequestParam(required = false, defaultValue = "") String query,
+								 @RequestParam(required = false, defaultValue = "") String id
+	) {
+		Location location = locationService.getFromDBByWoeid(locWoeid)
+			.orElseThrow(() -> new NoSuchElementException("Location not found."));
+		locationService.deleteFromDb(location);
+		return "redirect:/app";
+	}
+
 	// "/{locWoeid}/{cwid}/save"
-	// "/{locWoeid}/{cwid}/delete"
+	@GetMapping("/app/{locWoeid}/{cwId}/save")
+	public String saveConsolidatedWeather(@PathVariable Integer locWoeid,
+										  @PathVariable Long cwId,
+										  @RequestParam(required = false, defaultValue = "") String query,
+										  @RequestParam(required = false, defaultValue = "") String id
+	) {
+		Location location = locationService.getFromDBByWoeid(locWoeid)
+			.orElseThrow(() -> new NoSuchElementException("Location not found in DB."));
+
+		Weather weather = weatherService.getByWoeid(locWoeid);
+		ConsolidatedWeather consolidatedWeather = null;
+		for (ConsolidatedWeather cw : weather.getConsolidatedWeather()) {
+			if (cw.getCwId().equals(cwId)) {
+				consolidatedWeather = cw;
+			}
+		}
+		if (consolidatedWeather != null) {
+			consolidatedWeather.setLocation(location);
+			consolidatedWeatherService.add(consolidatedWeather);
+		} else {
+			throw new NoSuchElementException("Consolidated weather not found in that location.");
+		}
+		return "redirect:/app";
+	}
+
+	// "/consolidatedWeather/{cwid}/delete"
+	@GetMapping("/app/consolidatedWeather/{cwId}/delete")
+	public String deleteConsolidatedWeather(@PathVariable Long cwId,
+											@RequestParam(required = false, defaultValue = "") String query,
+											@RequestParam(required = false, defaultValue = "") String id
+	) {
+		ConsolidatedWeather consolidatedWeather = consolidatedWeatherService.getFromDBById(cwId)
+				.orElseThrow(() -> new NoSuchElementException("Consolidated weather not found."));
+		consolidatedWeatherService.delete(consolidatedWeather);
+		return "redirect:/app";
+	}
 }

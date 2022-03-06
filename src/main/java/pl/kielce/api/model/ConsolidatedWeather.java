@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -46,7 +45,7 @@ import java.util.Map;
 public class ConsolidatedWeather {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private Long dbId;
 
 	@JsonProperty("id")
@@ -284,5 +283,21 @@ public class ConsolidatedWeather {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
+	}
+
+	public Long getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(Long dbId) {
+		this.dbId = dbId;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 }

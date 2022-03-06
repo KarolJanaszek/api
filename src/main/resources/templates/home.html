@@ -60,6 +60,18 @@
                                 <a th:href="@{/app/(query=${#httpServletRequest.getParameter('query')}, id=${l.getWoeid()})}" class="link">
                                     <button type="button" class="btn btn-info">Show details</button>
                                 </a>
+                                <a th:if="${!l.checkIfIsInList(locationsInDB)}" th:href="@{/app/{locWoeid}/save(
+                                                                                        query=${#httpServletRequest.getParameter('query')},
+                                                                                        id=${l.getWoeid()},
+                                                                                        locWoeid=${l.getWoeid()})}">
+                                    <button type="button" class="btn btn-secondary">Add to DB</button>
+                                </a>
+                                <a th:if="${l.checkIfIsInList(locationsInDB)}" th:href="@{/app/{locWoeid}/delete(
+                                                                                        query=${#httpServletRequest.getParameter('query')},
+                                                                                        id=${l.getWoeid()},
+                                                                                        locWoeid=${l.getWoeid()})}">
+                                    <button type="button" class="btn btn-danger">Delete from DB</button>
+                                </a>
                             </td>
                             <td>
                                 <a class="link" th:href="@{/app/{locWoeid}/favorite(query=${#httpServletRequest.getParameter('query')},
@@ -112,16 +124,17 @@
                                             locWoeid=${selectedLocation.getWoeid()},
                                             cwId=${cw.getCwId()}
                                             )}">
-                                    <input type="button" class="btn btn-warning btn-xs" value="Save">
+                                    <input type="button" class="btn btn-warning btn-xs" value="Save"
+                                           th:disabled="${!selectedLocation.checkIfIsInList(locationsInDB)}"
+                                           th:title="${!selectedLocation.checkIfIsInList(locationsInDB) ? 'If you want add it to DB, add to DB location first.' : 'Add to DB.'}">
                                 </a>
                                 <a class="link" th:if="${cw.checkIfIsInList(cWeatherInDb)}"
-                                    th:href="@{/app/{locWoeid}/{cwId}/delete(
+                                    th:href="@{/app/consolidatedWeather/{cwId}/delete(
                                             query=${#httpServletRequest.getParameter('query')},
                                             id=${selectedLocation.getWoeid()},
-                                            locWoeid=${selectedLocation.getWoeid()},
                                             cwId=${cw.getCwId()}
                                             )}">
-                                    <input type="button" class="btn btn-danger btn-xs" value="Save">
+                                    <input type="button" class="btn btn-danger btn-xs" value="Delete">
                                 </a>
                             </td>
                         </tr>

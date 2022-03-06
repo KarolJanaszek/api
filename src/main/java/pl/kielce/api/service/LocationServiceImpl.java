@@ -57,9 +57,7 @@ public class LocationServiceImpl implements LocationService {
 		Location location = getFromDbOrApi(woeid)
 			.orElseThrow(() -> new NoSuchElementException("Location not found."));
 		location.setFavorite(!location.isFavorite());
-		if (location.getId() == null) {
-			addToDb(location);
-		}
+		locationRepo.save(location);
 	}
 
 	// from API
